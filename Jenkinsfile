@@ -102,7 +102,7 @@ pipeline {
                     steps {
                         echo "Running SonarQube analysis..."
                         script {
-                            withSonarQubeEnv(credentialsId: env.CRED_ID_SONAR) {
+                            withSonarQubeEnv(credentialsId: 'sonarqube-token') {
                                 // Maven command to run Sonar analysis
                                 sh 'mvn clean package sonar:sonar'
                             }
