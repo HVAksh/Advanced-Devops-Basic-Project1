@@ -3,9 +3,9 @@ package com.student;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AppTest {
+class AppTest { // No 'public' modifier on the class
     @Test
-    public void testApp() {
+    void testApp() { // No 'public' modifier on the method
         assertTrue(true);
     }
 }
