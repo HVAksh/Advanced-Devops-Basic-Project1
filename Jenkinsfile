@@ -237,7 +237,7 @@ pipeline {
             steps {
                 echo "Building Docker image containing the WAR..."
                 withCredentials([usernamePassword(
-                    credentialsId: "dockerhub", 
+                    credentialsId: 'dockerhub', 
                     usernameVariable: 'DOCKER_USER', 
                     passwordVariable: 'DOCKER_PASS'
                 )]) 
