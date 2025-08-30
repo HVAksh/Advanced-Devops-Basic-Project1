@@ -59,13 +59,13 @@ pipeline {
 
     stages {
 
-        stage('Example') {
-            steps {
-                ansiColor('xterm') {
-                    // your steps here
-                }
-            }
-        }
+        // stage('Example') {
+        //     steps {
+        //         ansiColor('xterm') {
+        //             // your steps here
+        //         }
+        //     }
+        // }
         // ------------------------------
         stage('Checkout Source') {
             steps {
