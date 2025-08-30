@@ -157,6 +157,7 @@ pipeline {
                     // Publish test reports regardless of success/failure
                     junit '**/target/surefire-reports/*.xml'
                     junit '**/target/failsafe-reports/*.xml'
+                    junit '**/target/test-classes/*.xml' // Ensure the path is correct
                 }
                 success {
                     // Archive WAR artifact for traceability
