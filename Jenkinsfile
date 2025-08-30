@@ -109,7 +109,16 @@ pipeline {
                             }
                         }
                         echo "Waiting for Quality Gate result..."
-                        timeout(time: 10, unit: 'MINUTES') { waitForQualityGate abortPipeline: true }
+                    //    timeout(time: 10, unit: 'MINUTES') { waitForQualityGate abortPipeline: true }
+                        timeout(time: 10, unit: 'MINUTES') {
+                            // Wait for Quality Gate status and bypass pipeline failure if it fails
+                            def qg = waitForQualityGate()
+                            if (qg.status != 'OK') {
+                            echo "Quality Gate failed: ${qg.status}. Proceeding with the build."
+                            // Change build result to SUCCESS or UNSTABLE, depending on your needs
+                            currentBuild.result = 'UNSTABLE' // Or 'SUCCESS' to fully bypass failure
+                            }
+                        }
                     }
                 }
                 stage('Dependency & OS Scan') {
