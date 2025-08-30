@@ -27,3 +27,15 @@
     </plugins>
   </build>
 </project>
+
+    
+<build>
+ <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+  <plugins>
+   <plugin>
+      <groupId>org.sonarsource.scanner.maven</groupId>
+      <artifactId>sonar-maven-plugin</artifactId>
+      <version>4.0.0.4121</version> <!-- Or the latest stable version -->
+   </plugin>
+  </plugins>
+</pluginManagement>
