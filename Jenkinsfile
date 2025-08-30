@@ -80,8 +80,7 @@ pipeline {
                     echo "Build tag: ${env.BUILD_TAG}"
                 }
             }
-        
-
+        }
         // ------------------------------
         stage('Pre-CI Security & Quality Scans') {
             parallel {
@@ -150,17 +149,18 @@ pipeline {
 
                     // Use Jenkins credentials for secure upload
                     withCredentials([usernamePassword(
-                        credentialsId: "nexus-creds", 
+                        credentialsId: 'nexus-creds', 
                         usernameVariable: 'NEXUS_USER', 
                         passwordVariable: 'NEXUS_PASS'
-                    )]) {
+                    )])
+                    {
                         retry(3) {
                             nexusArtifactUploader artifacts: [[ artifactId: "${env.APP_NAME}", 
                                                                 classifier: '', 
                                                                 file: "target/${env.WAR_FILE}", 
                                                                 type: 'war'
                                                             ]],
-                            credentialsId: env.CRED_ID_NEXUS,
+                            credentialsId: "",
                             groupId: "${env.GROUP_ID}",
                             nexusUrl: "nexus.example.com",
                             nexusVersion: 'nexus3',
@@ -250,8 +250,20 @@ pipeline {
                 }
             }
         }
+    }
 
-        // ------------------------------
+    post {
+        always {
+            echo "Archiving all reports and artifacts for traceability..."
+            archiveArtifacts artifacts: 'gitleaks-report.json, sbom-*.json, *.xml, target/*.war', allowEmptyArchive: true
+        }
+        success { echo "Pipeline SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}" }
+        failure { echo "Pipeline FAILURE: ${JOB_NAME} #${BUILD_NUMBER}" }
+    }
+}
+
+
+    // ------------------------------
     //     stage('Deploy to VM') {
     //         when { expression { params.RUN_DEPLOY } }
     //         steps {
@@ -300,15 +312,4 @@ pipeline {
     //             }
     //         }
     //     }
-    }
 
-    post {
-        always {
-            echo "Archiving all reports and artifacts for traceability..."
-            archiveArtifacts artifacts: 'gitleaks-report.json, sbom-*.json, *.xml, target/*.war', allowEmptyArchive: true
-        }
-        success { echo "Pipeline SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}" }
-        failure { echo "Pipeline FAILURE: ${JOB_NAME} #${BUILD_NUMBER}" }
-    }
-    
-}
