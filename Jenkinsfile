@@ -125,6 +125,14 @@ pipeline {
         }
 
         // ------------------------------
+        stage('temp-test') {
+            steps {
+                script {
+                    // Compile the project, run tests, and create reports
+                    sh 'mvn clean test'
+                }
+            }
+        }
         stage('Build & Test') {
             steps {
                 echo "Building application and running unit & integration tests..."
