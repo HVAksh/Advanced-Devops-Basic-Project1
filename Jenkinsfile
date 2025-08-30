@@ -24,7 +24,7 @@ pipeline {
 
     // General pipeline options
     options {
-        ansiColor('xterm')               // Colorized console output
+        //ansiColor('xterm')               // Colorized console output
         timestamps()                      // Show timestamps for each step
         disableConcurrentBuilds()         // Prevent overlapping builds
         buildDiscarder(logRotator(numToKeepStr: '5')) // Keep only last 5 builds
@@ -58,6 +58,14 @@ pipeline {
     }
 
     stages {
+
+        stage('Example') {
+            steps {
+                ansiColor('xterm') {
+                    // your steps here
+                }
+            }
+        }
         // ------------------------------
         stage('Checkout Source') {
             steps {
@@ -234,7 +242,7 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) 
                 {
-                    sh "docker login -u "$DOCKER_USER" -p "$DOCKER_PASS""
+                    sh 'docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"'
                 }
                 // {
                 //     sh "echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" ${DOCKER_REGISTRY} --password-stdin"
