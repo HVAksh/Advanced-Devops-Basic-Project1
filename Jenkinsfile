@@ -236,6 +236,7 @@ pipeline {
         stage('Docker: Build & Push') {
             steps {
                 echo "Building Docker image containing the WAR..."
+                script {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub', 
                     usernameVariable: 'DOCKER_USER', 
@@ -257,6 +258,7 @@ pipeline {
                     docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest
                     docker push ${DOCKER_IMAGE}:latest
                     """
+                }
                 }
             }
         }
