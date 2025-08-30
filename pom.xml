@@ -46,7 +46,10 @@
                         <goal>verify</goal>
                     </goals>
                     <configuration>
-                        <reportsDirectory>${project.build.directory}/failsafe-reports</reportsDirectory>
+                      <includes>
+                        <include>**/*Test.java</include> <!-- or any custom pattern -->
+                      </includes>
+                      <reportsDirectory>${project.build.directory}/failsafe-reports</reportsDirectory>
                     </configuration>
                 </execution>
             </executions>
