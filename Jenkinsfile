@@ -151,10 +151,10 @@ pipeline {
                     junit '**/target/failsafe-reports/*.xml'
 //                    junit '**/target/test-classes/*.xml' // Ensure the path is correct
                 }
-                success {
-                    // Archive WAR artifact for traceability
-                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-                }
+                // success {
+                //     // Archive WAR artifact for traceability
+                //     archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                // }
             }
         }
 
@@ -183,9 +183,9 @@ pipeline {
                                                             ]],
                             credentialsId: "",
                             groupId: "${env.GROUP_ID}",
-                            nexusUrl: "nexus.example.com",
+                            nexusUrl: "192.168.147.134:8081",
                             nexusVersion: 'nexus3',
-                            protocol: 'https',
+                            protocol: 'http',
                             repository: "${env.NEXUS_REPO_RELEASES}",
                             version: "${env.VERSION}"
                         }
