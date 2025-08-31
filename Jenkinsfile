@@ -35,12 +35,12 @@ pipeline {
         // Application coordinates
         APP_NAME = "maven-test-app"
         GROUP_ID = "com.student"
-        VERSION = ''                     // Set dynamically after checkout
-        WAR_FILE = ''                    // Set dynamically from POM version
-        BUILD_TAG = ''                   // Computed later after version is extracted        
-        // VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
-        // WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
-        // BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
+        // VERSION = ''                     // Set dynamically after checkout
+        // WAR_FILE = ''                    // Set dynamically from POM version
+        // BUILD_TAG = ''                   // Computed later after version is extracted        
+        VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
+        WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
+        BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
 
         // Nexus repository names
         NEXUS_REPO_RELEASES = "maven-releases"
@@ -48,7 +48,7 @@ pipeline {
 
         // Docker registry info
         //DOCKER_REGISTRY = "docker.io"
-        DOCKER_IMAGE = "student/${APP_NAME}"
+        DOCKER_IMAGE = "${APP_NAME}"
 
         // Jenkins credential IDs (configured in Jenkins Credentials)
         //CRED_ID_NEXUS = "creds-nexus"       // Username/password for Nexus
@@ -76,19 +76,19 @@ pipeline {
 
         // ------------------------------
 
-        stage('Extract Version from POM') {
-            steps {
-                script {
-                    def pom = readMavenPom file: 'pom.xml'
-                    env.VERSION = pom.version
-                    env.WAR_FILE = "${env.APP_NAME}-${env.VERSION}.war"
-                    env.BUILD_TAG = "${env.VERSION}-${env.BUILD_NUMBER}"
-                    echo "Extracted version: ${env.VERSION}"
-                    echo "Expected WAR: ${env.WAR_FILE}"
-                    echo "Build tag: ${env.BUILD_TAG}"
-                }
-            }
-        }
+        // stage('Extract Version from POM') {
+        //     steps {
+        //         script {
+        //             def pom = readMavenPom file: 'pom.xml'
+        //             env.VERSION = pom.version
+        //             env.WAR_FILE = "${env.APP_NAME}-${env.VERSION}.war"
+        //             env.BUILD_TAG = "${env.VERSION}-${env.BUILD_NUMBER}"
+        //             echo "Extracted version: ${env.VERSION}"
+        //             echo "Expected WAR: ${env.WAR_FILE}"
+        //             echo "Build tag: ${env.BUILD_TAG}"
+        //         }
+        //     }
+        // }
         // ------------------------------
         stage('Pre-CI Security & Quality Scans') {
             parallel {
@@ -136,14 +136,6 @@ pipeline {
         }
 
         // ------------------------------
-        stage('temp-test') {
-            steps {
-                script {
-                    // Compile the project, run tests, and create reports
-                    sh 'mvn clean test'
-                }
-            }
-        }
         stage('Build & Test') {
             steps {
                 echo "Building application and running unit & integration tests..."
@@ -201,58 +193,6 @@ pipeline {
                 }
             }
         }
-
-        // -----------------------------
-
-        stage('Cleanup Workspace') {
-            steps {
-                echo "Cleaning workspace before next steps..."
-                deleteDir()
-            }
-        }
-
-        // ------------------------------
-
-        stage('Download artifact from Nexus') {
-            steps {
-                echo "Downloading WAR From Nexus using Curl (secure, SCM-safe)..."
-                script {
-
-                    // Use Jenkins credentials for secure download
-                    withCredentials([usernamePassword(
-                        credentialsId: 'nexus-creds',
-                        usernameVariable: 'NEXUS_USER',
-                        passwordVariable: 'NEXUS_PASS'
-                    )]) {
-                        sh '''
-                        curl -u $NEXUS_USER:$NEXUS_PASS \
-                        -o myapp.war \
-                        https://nexus.company.com/repository/releases/com/company/app/myapp/1.0.0/myapp-1.0.0.war
-                        '''
-                    }
-                    {
-                        retry(3) {
-                            nexusArtifactUploader artifacts: [[ artifactId: "${env.APP_NAME}", 
-                                                                classifier: '', 
-                                                                file: "target/${env.WAR_FILE}", 
-                                                                type: 'war'
-                                                            ]],
-                            credentialsId: env.CRED_ID_NEXUS,
-                            groupId: "${env.GROUP_ID}",
-                            nexusUrl: "nexus.example.com",
-                            nexusVersion: 'nexus3',
-                            protocol: 'https',
-                            repository: "${env.NEXUS_REPO_RELEASES}",
-                            version: "${env.VERSION}"
-                        }
-                    }
-                    if (!fileExists("${env.WAR_FILE}")) {
-                        error("WAR not found after download: ${env.WAR_FILE}")
-                    }
-                }
-            }
-        }
-
         // ------------------------------
         stage('Docker: Build & Push') {
             steps {
@@ -273,7 +213,7 @@ pipeline {
                 // }
                 {
                     sh """
-                    cp ${env.WAR_FILE} ./app.war
+                    cp target/${WAR_FILE} ./app.war
                     docker build --pull -t ${DOCKER_IMAGE}:${BUILD_TAG} .
                     docker push ${DOCKER_IMAGE}:${BUILD_TAG}
                     docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest
