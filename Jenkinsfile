@@ -40,7 +40,7 @@ pipeline {
         // BUILD_TAG = ''                   // Computed later after version is extracted        
         // VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
         // WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
-        // BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
+        BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
 
         // Nexus repository names
         NEXUS_REPO_RELEASES = "maven-releases"
