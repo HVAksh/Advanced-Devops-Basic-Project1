@@ -143,6 +143,7 @@ pipeline {
                 retry(2) {
                     sh "mvn -B clean verify"
                 }
+                echo "Looking for WAR file: target/${env.WAR_FILE}"
             }
             post {
                 always {
@@ -162,6 +163,7 @@ pipeline {
         stage('Publish artifact to Nexus') {
             steps {
                 echo "Uploading WAR to Nexus using nexusArtifactUploader (secure, SCM-safe)..."
+                echo "Looking for WAR file: target/${env.WAR_FILE}"
                 script {
                     // Ensure the WAR exists
                     if (!fileExists("target/${env.WAR_FILE}")) {
