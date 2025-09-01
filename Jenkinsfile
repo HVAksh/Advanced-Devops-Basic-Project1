@@ -200,20 +200,20 @@ pipeline {
             steps {
                 echo "Building Docker image containing the WAR..."
                 script {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub', 
-                    usernameVariable: 'DOCKER_USER', 
-                    passwordVariable: 'DOCKER_PASS'
-                )]) 
-                {
-                    sh """
-                    echo $DOCKER_PASS | docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-                    """
-                }
+                // withCredentials([usernamePassword(
+                //     credentialsId: 'dockerhub', 
+                //     usernameVariable: 'DOCKER_USER', 
+                //     passwordVariable: 'DOCKER_PASS'
+                // )]) 
+                // {
+                //     sh """
+                //     echo $DOCKER_PASS | docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+                //     """
+                // }
                 // {
                 //     sh "echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" ${DOCKER_REGISTRY} --password-stdin"
                 // }
-                {
+                withDockerRegistry(credentialsId: 'dockerhub') {
                     sh """
                     cp target/${WAR_FILE} ./app.war
                     docker build --pull -t ${DOCKER_IMAGE}:${BUILD_TAG} .
