@@ -151,10 +151,10 @@ pipeline {
                     junit '**/target/failsafe-reports/*.xml'
 //                    junit '**/target/test-classes/*.xml' // Ensure the path is correct
                 }
-                // success {
-                //     // Archive WAR artifact for traceability
-                //     archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-                // }
+                success {
+                    // Archive WAR artifact for traceability
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                }
             }
         }
 
