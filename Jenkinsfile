@@ -35,9 +35,9 @@ pipeline {
         // Application coordinates
         APP_NAME = "01-maven-web-app"
         GROUP_ID = "com.student"
-        VERSION = ''                     // Set dynamically after checkout
-        WAR_FILE = ''                    // Set dynamically from POM version
-        BUILD_TAG = ''                   // Computed later after version is extracted        
+        // VERSION = ''                     // Set dynamically after checkout
+        // WAR_FILE = ''                    // Set dynamically from POM version
+        // BUILD_TAG = ''                   // Computed later after version is extracted        
         // VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
         // WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
         // BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
