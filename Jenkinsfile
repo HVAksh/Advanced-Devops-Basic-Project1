@@ -33,7 +33,7 @@ pipeline {
 
     environment {
         // Application coordinates
-        APP_NAME = "maven-test-app"
+        APP_NAME = "01-maven-web-app"
         GROUP_ID = "com.student"
         // VERSION = ''                     // Set dynamically after checkout
         // WAR_FILE = ''                    // Set dynamically from POM version
