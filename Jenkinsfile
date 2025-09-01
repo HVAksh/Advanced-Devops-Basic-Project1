@@ -43,8 +43,8 @@ pipeline {
         // BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
 
         // Nexus repository names
-        NEXUS_REPO_RELEASES = "maven-releases"
-        NEXUS_REPO_SNAPSHOTS = "maven-snapshots"
+        NEXUS_REPO_RELEASES = "maven-releases/"
+        NEXUS_REPO_SNAPSHOTS = "maven-snapshots/"
 
         // Docker registry info
         //DOCKER_REGISTRY = "docker.io"
