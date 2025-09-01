@@ -35,12 +35,12 @@ pipeline {
         // Application coordinates
         APP_NAME = "01-maven-web-app"
         GROUP_ID = "com.student"
-        // VERSION = ''                     // Set dynamically after checkout
-        // WAR_FILE = ''                    // Set dynamically from POM version
-        // BUILD_TAG = ''                   // Computed later after version is extracted        
-        VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
-        WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
-        BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
+        VERSION = ''                     // Set dynamically after checkout
+        WAR_FILE = ''                    // Set dynamically from POM version
+        BUILD_TAG = ''                   // Computed later after version is extracted        
+        // VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
+        // WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
+        // BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
 
         // Nexus repository names
         NEXUS_REPO_RELEASES = "maven-releases"
@@ -76,19 +76,19 @@ pipeline {
 
         // ------------------------------
 
-        // stage('Extract Version from POM') {
-        //     steps {
-        //         script {
-        //             def pom = readMavenPom file: 'pom.xml'
-        //             env.VERSION = pom.version
-        //             env.WAR_FILE = "${env.APP_NAME}-${env.VERSION}.war"
-        //             env.BUILD_TAG = "${env.VERSION}-${env.BUILD_NUMBER}"
-        //             echo "Extracted version: ${env.VERSION}"
-        //             echo "Expected WAR: ${env.WAR_FILE}"
-        //             echo "Build tag: ${env.BUILD_TAG}"
-        //         }
-        //     }
-        // }
+        stage('Extract Version from POM') {
+            steps {
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    env.VERSION = pom.version
+                    env.WAR_FILE = "${env.APP_NAME}-${env.VERSION}.war"
+                    env.BUILD_TAG = "${env.VERSION}-${env.BUILD_NUMBER}"
+                    echo "Extracted version: ${env.VERSION}"
+                    echo "Expected WAR: ${env.WAR_FILE}"
+                    echo "Build tag: ${env.BUILD_TAG}"
+                }
+            }
+        }
         // ------------------------------
         stage('Pre-CI Security & Quality Scans') {
             parallel {
