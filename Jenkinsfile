@@ -40,7 +40,7 @@ pipeline {
         // BUILD_TAG = ''                   // Computed later after version is extracted        
         // VERSION = "3.0.${BUILD_NUMBER}"          // Build-number-based versioning
         // WAR_FILE = "${APP_NAME}-${VERSION}.war"  // Name of WAR created
-        BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
+        //BUILD_TAG = "${BRANCH_NAME ?: 'local'}-${BUILD_NUMBER}" // Unique tag for Docker
 
         // Nexus repository names
         NEXUS_REPO_RELEASES = "maven-releases"
@@ -216,11 +216,11 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh """
                         cp target/${WAR_FILE} ./app.war
-                        docker build --pull -t ${DOCKER_IMAGE}:${BUILD_TAG} .
-                        docker tag ${DOCKER_IMAGE}:${BUILD_TAG} hvaksh/${DOCKER_IMAGE}-${BUILD_TAG}:latest
-                        docker tag ${DOCKER_IMAGE}:${BUILD_TAG} hvaksh/${DOCKER_IMAGE}-${BUILD_TAG}:${env.VERSION}
-                        docker push hvaksh/${DOCKER_IMAGE}:${BUILD_TAG}:latest
-                        docker push hvaksh/${DOCKER_IMAGE}:${BUILD_TAG}:${env.VERSION}
+                        docker build --pull -t ${DOCKER_IMAGE} .
+                        docker tag ${DOCKER_IMAGE} hvaksh/${DOCKER_IMAGE}:latest
+                        docker tag ${DOCKER_IMAGE} hvaksh/${DOCKER_IMAGE}:${env.VERSION}
+                        docker push hvaksh/${DOCKER_IMAGE}:latest
+                        docker push hvaksh/${DOCKER_IMAGE}:${env.VERSION}
                         """
                     }
                 }
