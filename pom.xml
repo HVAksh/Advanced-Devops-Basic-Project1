@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.student</groupId>
   <artifactId>01-maven-web-app</artifactId>
-  <packaging>war</packaging>
   <version>1.0.0</version>
+  <packaging>war</packaging>
   <name>01-maven-web-app</name>
   <url>http://maven.apache.org</url>
 
@@ -17,7 +17,7 @@
     </dependency>  
   </dependencies>
   <build>
-    <finalName>01-maven-web-app</finalName>
+<!--    <finalName>01-maven-web-app</finalName>-->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
