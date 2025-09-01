@@ -4,7 +4,7 @@
   <groupId>com.student</groupId>
   <artifactId>01-maven-web-app</artifactId>
   <packaging>war</packaging>
-  <version>3.0.1</version>
+  <version>1.0.0</version>
   <name>01-maven-web-app</name>
   <url>http://maven.apache.org</url>
 
