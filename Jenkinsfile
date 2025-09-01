@@ -183,7 +183,7 @@ pipeline {
                                                                 file: "target/${env.WAR_FILE}", 
                                                                 type: 'war'
                                                             ]],
-                            credentialsId: "",
+                            credentialsId: 'nexus-creds',
                             groupId: "${env.GROUP_ID}",
                             nexusUrl: "192.168.147.134:8081",
                             nexusVersion: 'nexus3',
