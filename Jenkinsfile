@@ -216,10 +216,12 @@ pipeline {
                     withDockerRegistry(credentialsId: 'dockerhub') {
                         sh """
                         cp target/${WAR_FILE} ./app.war
-                        docker build --pull -t ${DOCKER_IMAGE}:${BUILD_TAG} .
-                        docker push ${DOCKER_IMAGE}:${BUILD_TAG}
-                        docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest
-                        docker push ${DOCKER_IMAGE}:latest
+                        docker build --pull -t hvaksh/${DOCKER_IMAGE}:${BUILD_TAG} .
+                        docker push hvaksh/${DOCKER_IMAGE}:${BUILD_TAG}
+                        docker tag ${DOCKER_IMAGE}:${BUILD_TAG} hvaksh/${DOCKER_IMAGE}:latest
+                        docker push hvaksh/${DOCKER_IMAGE}:latest
+                        docker tag ${DOCKER_IMAGE}:${BUILD_TAG} hvaksh/${DOCKER_IMAGE}:${env.VERSION}
+                        docker push hvaksh/${DOCKER_IMAGE}:${env.VERSION}
                         """
                     }
                 }
