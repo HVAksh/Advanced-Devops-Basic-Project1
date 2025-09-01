@@ -8,5 +8,5 @@ WORKDIR /usr/local/tomcat/webapps/
 EXPOSE 8080
 
 # Copy the WAR file from the target directory of your Maven project to the Tomcat webapps directory
-COPY maven-test-app.war /usr/local/tomcat/webapps/
+COPY target/*.war /usr/local/tomcat/webapps/
 # COPY target/*.war /usr/local/tomcat/webapps/

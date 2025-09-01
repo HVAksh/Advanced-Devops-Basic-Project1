@@ -213,15 +213,15 @@ pipeline {
                 // {
                 //     sh "echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" ${DOCKER_REGISTRY} --password-stdin"
                 // }
-                withDockerRegistry(credentialsId: 'dockerhub') {
-                    sh """
-                    cp target/${WAR_FILE} ./app.war
-                    docker build --pull -t ${DOCKER_IMAGE}:${BUILD_TAG} .
-                    docker push ${DOCKER_IMAGE}:${BUILD_TAG}
-                    docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest
-                    docker push ${DOCKER_IMAGE}:latest
-                    """
-                }
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh """
+                        cp target/${WAR_FILE} ./app.war
+                        docker build --pull -t ${DOCKER_IMAGE}:${BUILD_TAG} .
+                        docker push ${DOCKER_IMAGE}:${BUILD_TAG}
+                        docker tag ${DOCKER_IMAGE}:${BUILD_TAG} ${DOCKER_IMAGE}:latest
+                        docker push ${DOCKER_IMAGE}:latest
+                        """
+                    }
                 }
             }
         }
