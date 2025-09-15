@@ -160,72 +160,72 @@ pipeline {
         }
 
         // ------------------------------
-        stage('Publish artifact to Nexus') {
-            steps {
-                echo "Uploading WAR to Nexus using nexusArtifactUploader (secure, SCM-safe)..."
-                echo "Looking for WAR file: target/${env.WAR_FILE}"
-                script {
-                    // Ensure the WAR exists
-                    if (!fileExists("target/${env.WAR_FILE}")) {
-                        error("WAR not found: target/${env.WAR_FILE}")
-                    }
+        // stage('Publish artifact to Nexus') {
+        //     steps {
+        //         echo "Uploading WAR to Nexus using nexusArtifactUploader (secure, SCM-safe)..."
+        //         echo "Looking for WAR file: target/${env.WAR_FILE}"
+        //         script {
+        //             // Ensure the WAR exists
+        //             if (!fileExists("target/${env.WAR_FILE}")) {
+        //                 error("WAR not found: target/${env.WAR_FILE}")
+        //             }
 
-                    // Use Jenkins credentials for secure upload
-                    withCredentials([usernamePassword(
-                        credentialsId: 'nexus-creds', 
-                        usernameVariable: 'NEXUS_USER', 
-                        passwordVariable: 'NEXUS_PASS'
-                    )])
-                    {
-                        retry(3) {
-                            nexusArtifactUploader artifacts: [[ artifactId: "${env.APP_NAME}", 
-                                                                classifier: '', 
-                                                                file: "target/${env.WAR_FILE}", 
-                                                                type: 'war'
-                                                            ]],
-                            credentialsId: 'nexus-creds',
-                            groupId: "${env.GROUP_ID}",
-                            nexusUrl: "192.168.147.134:8081",
-                            nexusVersion: 'nexus3',
-                            protocol: 'http',
-                            repository: "${env.NEXUS_REPO_RELEASES}",
-                            version: "${env.VERSION}"
-                        }
-                    }
-                }
-            }
-        }
-        // ------------------------------
-        stage('Docker: Build & Push') {
-            steps {
-                echo "Building Docker image containing the WAR..."
-                script {
-                // withCredentials([usernamePassword(
-                //     credentialsId: 'dockerhub', 
-                //     usernameVariable: 'DOCKER_USER', 
-                //     passwordVariable: 'DOCKER_PASS'
-                // )]) 
-                // {
-                //     sh """
-                //     echo $DOCKER_PASS | docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-                //     """
-                // }
-                // {
-                //     sh "echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" ${DOCKER_REGISTRY} --password-stdin"
-                // }
-                    withDockerRegistry(credentialsId: 'dockerhub') {
-                        sh """
-                        cp target/${WAR_FILE} ./app.war
-                        docker build --pull -t ${DOCKER_IMAGE} .
-                        docker tag ${DOCKER_IMAGE} hvaksh/${DOCKER_IMAGE}:latest
-                        docker tag ${DOCKER_IMAGE} hvaksh/${DOCKER_IMAGE}:${env.VERSION}
-                        docker push hvaksh/${DOCKER_IMAGE}:latest
-                        docker push hvaksh/${DOCKER_IMAGE}:${env.VERSION}
-                        """
-                    }
-                }
-            }
-        }
+        //             // Use Jenkins credentials for secure upload
+        //             withCredentials([usernamePassword(
+        //                 credentialsId: 'nexus-creds', 
+        //                 usernameVariable: 'NEXUS_USER', 
+        //                 passwordVariable: 'NEXUS_PASS'
+        //             )])
+        //             {
+        //                 retry(3) {
+        //                     nexusArtifactUploader artifacts: [[ artifactId: "${env.APP_NAME}", 
+        //                                                         classifier: '', 
+        //                                                         file: "target/${env.WAR_FILE}", 
+        //                                                         type: 'war'
+        //                                                     ]],
+        //                     credentialsId: 'nexus-creds',
+        //                     groupId: "${env.GROUP_ID}",
+        //                     nexusUrl: "192.168.147.134:8081",
+        //                     nexusVersion: 'nexus3',
+        //                     protocol: 'http',
+        //                     repository: "${env.NEXUS_REPO_RELEASES}",
+        //                     version: "${env.VERSION}"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // // ------------------------------
+        // stage('Docker: Build & Push') {
+        //     steps {
+        //         echo "Building Docker image containing the WAR..."
+        //         script {
+        //         // withCredentials([usernamePassword(
+        //         //     credentialsId: 'dockerhub', 
+        //         //     usernameVariable: 'DOCKER_USER', 
+        //         //     passwordVariable: 'DOCKER_PASS'
+        //         // )]) 
+        //         // {
+        //         //     sh """
+        //         //     echo $DOCKER_PASS | docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+        //         //     """
+        //         // }
+        //         // {
+        //         //     sh "echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" ${DOCKER_REGISTRY} --password-stdin"
+        //         // }
+        //             withDockerRegistry(credentialsId: 'dockerhub') {
+        //                 sh """
+        //                 cp target/${WAR_FILE} ./app.war
+        //                 docker build --pull -t ${DOCKER_IMAGE} .
+        //                 docker tag ${DOCKER_IMAGE} hvaksh/${DOCKER_IMAGE}:latest
+        //                 docker tag ${DOCKER_IMAGE} hvaksh/${DOCKER_IMAGE}:${env.VERSION}
+        //                 docker push hvaksh/${DOCKER_IMAGE}:latest
+        //                 docker push hvaksh/${DOCKER_IMAGE}:${env.VERSION}
+        //                 """
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     post {
