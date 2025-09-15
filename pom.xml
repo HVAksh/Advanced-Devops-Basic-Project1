@@ -71,13 +71,13 @@
               <goal>report</goal>
             </goals>
           </execution>
-          <execution>
+<!--           <execution>
             <id>testreport</id>
             <phase>test</phase>
             <goals>
              <goal>report</goal>
             </goals>
-          </execution>
+          </execution> -->
         </executions>
       </plugin>
     </plugins>
